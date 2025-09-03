@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Interview Prep Cards</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Sticky Header (beveled liquid glass) -->
+  <header class="appbar" id="appbar" aria-label="Sticky header">
+    <div class="appbar-inner">
+      <img src="logo-nobg.png" alt="Logo" class="brand-logo" style="width:auto ;height:40px;object-fit:contain;" />
+      <div class="title-wrap">
+        <h1 class="title" id="title">Interview Prep Cards</h1>
+        <div class="subtitle">by darylmilanes.com</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Welcome / Guide (full screen on load) -->
+  <section class="welcome" id="welcome" aria-labelledby="welcomeTitle">
+    <div class="welcome-panel">
+      <h2 id="welcomeTitle">Welcome</h2>
+      <p class="lead">
+        Your fast, focused space to practice real interview questions.<br>
+        <strong>Limitations:</strong>
+        <ul style="margin-top:8px;margin-bottom:8px;color:#4a4a4a;font-size:15px;">
+          <li>Notes are saved only in your browser (localStorage).</li>
+          <li>Cards/questions are fixed and cannot be customized.</li>
+          <li>No account, sync, or export features.</li>
+          <li>Works best on modern desktop browsers.</li>
+        </ul>
+      </p>
+      <ol class="guide">
+        <li>Review the guide below.</li>
+        <li>Click the arrow to begin.</li>
+        <li>Tap a card to flip-zoom open.</li>
+        <li>Read tips, answer guided prompts, then Save.</li>
+        <li>Your notes are saved locally and persist between visits.</li>
+      </ol>
+      <div class="arrow-next" id="arrowNext" tabindex="0" role="button" aria-label="Go to cards" style="margin:32px auto 0;display:flex;justify-content:center;align-items:center;cursor:pointer;">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 24L32 24" stroke="#006666" stroke-width="4" stroke-linecap="round"/>
+          <path d="M28 20L32 24L28 28" stroke="#006666" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cards Grid -->
+  <main class="grid-wrap" id="gridWrap" style="display:none;">
+    <div class="cards" id="cards" aria-live="polite" aria-busy="false">
+      <!-- Cards are injected by app.js -->
+    </div>
+  </main>
+
+  <!-- Active Card Overlay (flip-zoom) -->
+  <div class="overlay" id="overlay" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="overlay-backdrop" id="backdrop"></div>
+    <div class="card-active" id="activeCard" role="document">
+      <!-- Active card content is injected dynamically -->
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p>
+        Need help sharpening your interview skills?
+        <a href="mailto:connect@darylmilanes.com" class="email-link">connect@darylmilanes.com</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
