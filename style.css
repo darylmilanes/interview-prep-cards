@@ -187,7 +187,7 @@ body {
 }
 .card .q{
   font-weight: 600;
-  font-size: clamp(20px, 1.6vw, 50px);
+  font-size: clamp(15px, 1.6vw, 20px);
   line-height: 1.35;
   color: #006666;
 }
