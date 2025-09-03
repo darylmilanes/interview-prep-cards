@@ -266,6 +266,15 @@ body {
 .card-active .body{
   overflow: auto;
   padding: 16px 18px;
+  -webkit-overflow-scrolling: touch; /* smooth native scrolling on iOS */
+}
+
+/* Prevent background from scrolling when overlay is open by making overlay capture wheel/touch events */
+.overlay.show {
+  touch-action: none;
+}
+.overlay.show .card-active .body {
+  touch-action: auto; /* allow scrolling inside card body only */
 }
 .meta{
   display: grid;
