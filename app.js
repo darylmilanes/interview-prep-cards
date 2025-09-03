@@ -294,6 +294,10 @@ const gridWrap   = $('#gridWrap');
 const arrowNext  = $('#arrowNext');
 
 const STORAGE_PREFIX = 'ipcard_v1_';
+let _savedScrollY = 0;
+
+// touchmove handler reference so we can remove it later
+let _overlayTouchHandler = null;
 
 // ---------- Build grid cards ----------
 function buildGrid() {
@@ -372,14 +376,7 @@ function openActive(cardId) {
   const h3 = document.createElement('h3');
   h3.textContent = data.q;
 
-  const closeBtn = document.createElement('button');
-  closeBtn.className = 'icon-btn';
-  closeBtn.type = 'button';
-  closeBtn.textContent = 'Close';
-  closeBtn.addEventListener('click', closeActive);
-
   head.appendChild(h3);
-  head.appendChild(closeBtn);
 
   const body = document.createElement('div');
   body.className = 'body';
@@ -408,19 +405,17 @@ function openActive(cardId) {
     el.id = `${data.id}_${f.key}`;
     el.name = f.key;
 
-    // Prefill with saved value or sample
+    // Prefill: if user has saved content, use it; otherwise show sample as a placeholder
     const hasSaved = saved && typeof saved[f.key] === 'string' && saved[f.key].trim().length > 0;
-    el.value = hasSaved ? saved[f.key] : f.sample;
+    if (hasSaved) {
+      el.value = saved[f.key];
+    } else {
+      el.value = '';
+      el.placeholder = f.sample;
+    }
 
-    // If user types for the first time when value equals sample, clear once
-    let clearedOnce = hasSaved ? true : false;
-    el.addEventListener('focus', () => {
-      if (!clearedOnce && el.value === f.sample) {
-        el.value = '';
-      }
-    });
+    // Update tracked value only when user types
     el.addEventListener('input', () => {
-      clearedOnce = true;
       fieldValues[f.key] = el.value;
     });
 
@@ -466,6 +461,21 @@ function openActive(cardId) {
   overlay.classList.add('show');
   overlay.setAttribute('aria-hidden', 'false');
 
+  // Lock background scrolling: fix body in place and preserve scroll position
+  _savedScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${_savedScrollY}px`;
+  document.body.style.left = '0';
+  document.body.style.right = '0';
+
+  // Prevent touchmove from scrolling the background on touch devices when touching outside the active card
+  _overlayTouchHandler = function (e) {
+    if (!activeCard.contains(e.target)) {
+      e.preventDefault();
+    }
+  };
+  overlay.addEventListener('touchmove', _overlayTouchHandler, { passive: false });
+
   // Flip-zoom animation: force reflow and re-apply animation
   activeCard.style.animation = 'none';
   // Force reflow
@@ -482,6 +492,17 @@ function openActive(cardId) {
 function closeActive() {
   overlay.classList.remove('show');
   overlay.setAttribute('aria-hidden', 'true');
+
+  // Restore body scroll position and remove touch handler
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.left = '';
+  document.body.style.right = '';
+  window.scrollTo(0, _savedScrollY || 0);
+  if (_overlayTouchHandler) {
+    overlay.removeEventListener('touchmove', _overlayTouchHandler, { passive: false });
+    _overlayTouchHandler = null;
+  }
 }
 
 function escListener(e) {
