@@ -1,3 +1,58 @@
+// IndexedDB utility for local data storage
+const DB_NAME = 'prepCardsDB';
+const DB_VERSION = 1;
+const STORE_NAME = 'notes';
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    request.onupgradeneeded = function(event) {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+      }
+    };
+    request.onsuccess = function(event) {
+      resolve(event.target.result);
+    };
+    request.onerror = function(event) {
+      reject(event.target.error);
+    };
+  });
+}
+
+async function idbSet(id, value) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    const store = tx.objectStore(STORE_NAME);
+    store.put({ id, value });
+    tx.oncomplete = () => resolve();
+    tx.onerror = event => reject(event.target.error);
+  });
+}
+
+async function idbGet(id) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readonly');
+    const store = tx.objectStore(STORE_NAME);
+    const request = store.get(id);
+    request.onsuccess = () => resolve(request.result ? request.result.value : null);
+    request.onerror = event => reject(event.target.error);
+  });
+}
+
+async function idbRemove(id) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    const store = tx.objectStore(STORE_NAME);
+    store.delete(id);
+    tx.oncomplete = () => resolve();
+    tx.onerror = event => reject(event.target.error);
+  });
+}
 /* ---------------------------------------------------------
    Interview Prep Cards — App
    - Responsive grid (2 / 3 / 5 columns)
