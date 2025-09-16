@@ -5,6 +5,9 @@
   --accent: #006666;
   --white: #fafeff;
   --text: #4a4a4a;
+  /* User input text should be solid black-ish; placeholders stay light grey */
+  --input-text: #4a4a4a;
+  --input-placeholder: rgba(74,74,74,0.55);
   --text-soft: #6a7a7a;
   --ring: rgba(0,102,102,.18);
   --radius: 22px;
@@ -90,6 +93,33 @@ body {
   font-weight: 500;
   opacity: 0.85;
 }
+/* Input & editable text styling */
+input, textarea, select, button, [contenteditable] {
+  color: var(--input-text);
+  caret-color: var(--accent);
+  font-family: inherit;
+}
+
+/* Placeholder color (modern browsers) */
+input::placeholder, textarea::placeholder {
+  color: var(--input-placeholder);
+  opacity: 1; /* keep color variable opacity consistent */
+}
+
+/* Keep autofill/restore text color consistent in WebKit-based browsers */
+input:-webkit-autofill, textarea:-webkit-autofill {
+  -webkit-text-fill-color: var(--input-text) !important;
+}
+
+/* Readonly/disabled inputs should also show user text color */
+input[readonly], textarea[readonly], input:disabled, textarea:disabled {
+  color: var(--input-text);
+  opacity: 1;
+}
+
+/* Utility classes for quick overrides */
+.input-color--accent { color: var(--accent) !important; caret-color: var(--accent) !important; }
+.input-color--muted  { color: var(--text-soft) !important; caret-color: var(--text-soft) !important; }
 /* Pulsing arrow for next page */
 .arrow-next {
   animation: pulseArrow 1.2s infinite;
@@ -303,12 +333,13 @@ body {
   color: #5d5d5d;
   margin: 0 0 6px 2px;
 }
+/* Guided fields inside cards should use the user input color */
 .group textarea, .group input{
   width: 100%;
   border-radius: 14px;
   border: 1px solid rgba(255,255,255,.30);
   background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
-  color: #c0bfbf;
+  color: var(--input-text);
   padding: 12px 14px;
   outline: none;
   box-shadow: var(--glass-inner), 0 6px 18px rgba(0,0,0,.2);
@@ -387,6 +418,11 @@ body {
   border-radius: 12px;
   border: 2px solid transparent;
   background-clip: padding-box;
+}
+
+/* Stronger specificity: inputs inside cards should always show the input text color */
+.card input, .card textarea, .card-active input, .card-active textarea {
+  color: var(--input-text) !important;
 }
 
 /* Safe-area for iOS */
