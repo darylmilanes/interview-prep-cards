@@ -1,0 +1,21 @@
+{
+  "name": "Interview Prep Cards",
+  "short_name": "Prep Cards",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fafeff",
+  "theme_color": "#006666",
+  "description": "Practice real interview questions and save notes locally.",
+  "icons": [
+    {
+      "src": "logo-nobg.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "logo-nobg.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
